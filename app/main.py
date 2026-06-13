@@ -1,11 +1,13 @@
+# pyrefly: ignore [missing-import]
 from fastapi import FastAPI
 from src.prediction_logger import log_prediction
+# pyrefly: ignore [missing-import]
 from prometheus_fastapi_instrumentator import Instrumentator
 
 from pydantic import BaseModel
 from src.pipeline.prediction_pipeline import run_prediction_pipeline
 app= FastAPI(title="Loan Prediction API", description="API for predicting loan status")
-Instrumentator().instrument(app).expose(app,endpoint="/metrrics")
+Instrumentator().instrument(app).expose(app,endpoint="/metrics")
 
 class LoanInput(BaseModel):
     credit_policy: float
