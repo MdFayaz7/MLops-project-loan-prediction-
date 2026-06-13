@@ -19,6 +19,6 @@ jobs:
 
       - name: Push to Hub
         env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: |
-          git push --force https://mohammadfayaz:$HF_TOKEN@huggingface.co/spaces/MDFayaz/loan_approval_prediction main
+          HF_TOKEN: ${{ secrets.loan }}
+        run: 
+             git push --force https://oauth:$HF_TOKEN@huggingface.co/spaces/MDFayaz/loan_approval_prediction main
