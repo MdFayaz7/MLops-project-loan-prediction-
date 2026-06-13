@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 from src.prediction_logger import log_prediction
-
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from pydantic import BaseModel
 from src.pipeline.prediction_pipeline import run_prediction_pipeline
 app= FastAPI(title="Loan Prediction API", description="API for predicting loan status")
+Instrumentator().instrument(app).expose(app,endpoint="/metrrics")
+
 class LoanInput(BaseModel):
     credit_policy: float
     purpose: str
@@ -19,6 +21,7 @@ class LoanInput(BaseModel):
     inq_last_6mths: float
     delinq_2yrs: float
     pub_rec: float
+
 
 @app.post("/predict")
 def predict(data:LoanInput):
