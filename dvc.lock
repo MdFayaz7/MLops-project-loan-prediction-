@@ -1,0 +1,32 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: python -m src.pipeline.training_pipeline
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: 96a249d24fcdf118601dda7355002fb4
+      size: 317
+    - path: data/raw/loan_data.csv
+      hash: md5
+      md5: 8256d38eed367beddc375ef7dd4ecc4e
+      size: 751253
+    - path: src/components/
+      hash: md5
+      md5: 37fc66c43be5c93289cbcc67765e2007.dir
+      size: 10243
+      nfiles: 6
+    - path: src/pipeline/training_pipeline.py
+      hash: md5
+      md5: cad4c92c32bd4c97fcda5a5a9cb230c7
+      size: 2263
+    outs:
+    - path: artifacts/model.pkl
+      hash: md5
+      md5: 2e288ae186c5ba03316d6e1fd38dbaea
+      size: 88101599
+    - path: data/processed/
+      hash: md5
+      md5: a9ee3193265bdb9d47e6417fba25f2fb.dir
+      size: 638898
+      nfiles: 1

@@ -1,0 +1,7 @@
+/model.pkl
+venv/
+__pycache__/
+*.pyc
+.git/
+mlruns/
+.dvc/

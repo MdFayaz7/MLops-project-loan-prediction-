@@ -1,0 +1,15 @@
+data:
+  raw_path: data/raw/loan_data.csv
+  processed_path: data/processed/loan_processed.csv
+  target_column: not.fully.paid
+  categorical_columns:
+    - purpose
+
+model:
+  n_estimators: 600
+  random_state: 42
+  test_size: 0.3
+
+artifacts:
+  model_path: artifacts/model.pkl
+  encoder_path: artifacts/label_encoders.pkl

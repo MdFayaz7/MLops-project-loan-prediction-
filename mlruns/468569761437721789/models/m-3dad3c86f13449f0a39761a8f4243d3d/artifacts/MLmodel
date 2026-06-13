@@ -1,0 +1,22 @@
+artifact_path: file:///Users/mohammadfayaz/Downloads/projects/Loan%20project/loan-prediction/mlruns/468569761437721789/models/m-3dad3c86f13449f0a39761a8f4243d3d/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.9.6
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.6.1
+mlflow_version: 3.1.4
+model_id: m-3dad3c86f13449f0a39761a8f4243d3d
+model_size_bytes: 88101599
+model_uuid: m-3dad3c86f13449f0a39761a8f4243d3d
+prompts: null
+run_id: 3187ebc8c78c4073abee56342bde739c
+utc_time_created: '2026-06-13 05:42:05.497881'

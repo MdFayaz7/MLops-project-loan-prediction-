@@ -1,0 +1,6 @@
+timestamp,prediction,label,credit.policy,purpose,int.rate,installment,log.annual.inc,dti,fico,days.with.cr.line,revol.bal,revol.util,inq.last.6mths,delinq.2yrs,pub.rec
+2026-06-13T12:21:06.456951,0,Approved,1.0,debt_consolidation,0.1189,829.1,11.35,19.48,737.0,5639.96,28854.0,52.1,0.0,0.0,0.0
+2026-06-13T12:53:05.330200,unknown,0,Approved,0.0,string,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+2026-06-13T12:56:15.914375,unknown,0,Approved,0.0,string,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,2.0,0.0
+2026-06-13T12:56:31.135718,unknown,0,Approved,0.0,string,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,3.0,2.0,1.0
+2026-06-13T12:56:44.786897,unknown,1,Rejected,1.0,string,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,3.0,2.0,1.0

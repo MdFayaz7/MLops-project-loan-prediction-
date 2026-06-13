@@ -1,0 +1,10 @@
+artifact_location: file:///Users/mohammadfayaz/Downloads/projects/Loan%20project/loan-prediction/mlruns/468569761437721789/models/m-a55208e689b14c8aaa3238571d21fa9a/artifacts
+creation_timestamp: 1781291569026
+experiment_id: '468569761437721789'
+last_updated_timestamp: 1781291572796
+model_id: m-a55208e689b14c8aaa3238571d21fa9a
+model_type: null
+name: model
+source_run_id: c988090cb0574c6fa889efb68bf98f72
+status: 2
+status_message: null
