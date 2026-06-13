@@ -1,24 +1,19 @@
-name: Sync to Hugging Face hub
-
-on:
-  push:
-    branches: [main]
-
-  # to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-jobs:
-  sync-to-hub:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          lfs: true
-
       - name: Push to Hub
         env:
           HF_TOKEN: ${{ secrets.loan }}
-        run: 
-             git push --force https://oauth:$HF_TOKEN@huggingface.co/spaces/MDFayaz/loan_approval_prediction main
+        run: |
+          # 1. Configure git user
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          
+          # 2. Clean the git history in the runner environment
+          rm -rf .git
+          
+          # 3. Create a fresh repository with only current files
+          git init
+          git checkout -b main
+          git add .
+          git commit -m "Deploy current state to Hugging Face"
+          
+          # 4. Push this clean commit
+          git push --force https://oauth:$HF_TOKEN@huggingface.co/spaces/MDFayaz/loan_approval_prediction main
