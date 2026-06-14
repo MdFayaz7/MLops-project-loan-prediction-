@@ -6,3 +6,4 @@ mlflow
 fastapi
 uvicorn
 prometheus-fastapi-instrumentator
+evidently

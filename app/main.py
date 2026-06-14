@@ -1,13 +1,35 @@
 # pyrefly: ignore [missing-import]
 from fastapi import FastAPI
+# pyrefly: ignore [missing-import]
+from fastapi.responses import HTMLResponse
 from src.prediction_logger import log_prediction
 # pyrefly: ignore [missing-import]
 from prometheus_fastapi_instrumentator import Instrumentator
 
 from pydantic import BaseModel
 from src.pipeline.prediction_pipeline import run_prediction_pipeline
+from src.components.model_monitoring import ModelMonitoring
+
 app= FastAPI(title="Loan Prediction API", description="API for predicting loan status")
 Instrumentator().instrument(app).expose(app,endpoint="/metrics")
+
+@app.get("/monitoring", response_class=HTMLResponse)
+def get_monitoring_report(refresh: bool = False):
+    monitoring = ModelMonitoring()
+    # If refresh is true or the report does not exist, trigger a run
+    if refresh or not monitoring.report_html_path.exists():
+        monitoring.run()
+    
+    if not monitoring.report_html_path.exists():
+        return HTMLResponse(
+            content="<h1>Monitoring Report not found. Ensure there is enough prediction log data.</h1>",
+            status_code=404
+        )
+        
+    with open(monitoring.report_html_path, "r", encoding="utf-8") as f:
+        html_content = f.read()
+    return HTMLResponse(content=html_content, status_code=200)
+
 
 class LoanInput(BaseModel):
     credit_policy: float
