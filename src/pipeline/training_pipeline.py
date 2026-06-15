@@ -1,4 +1,17 @@
+# pyrefly: ignore [missing-import]
+import os
+# pyrefly: ignore [missing-import]
 import mlflow
+# pyrefly: ignore [missing-import]
+import dagshub
+from dotenv import load_dotenv
+load_dotenv()
+
+
+
+
+
+# pyrefly: ignore [missing-import]
 import mlflow.sklearn
 import json
 from src.components.data_ingestion import DataIngestion
@@ -11,6 +24,13 @@ from src.utils import load_config, ROOT_DIR
 
 def run_training_pipeline():
     config = load_config()
+
+
+    dagshub.init(
+        repo_owner=os.getenv("DAGSHUB_REPO_OWNER"),
+        repo_name=os.getenv("DAGSHUB_REPO_NAME"),
+        mlflow=True 
+    )
     mlflow.set_experiment("loan-prediction")
 
     raw_path = ROOT_DIR / config["data"]["raw_path"]

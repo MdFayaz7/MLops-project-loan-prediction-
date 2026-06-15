@@ -1,0 +1,67 @@
+name: Model Retraining Workflow
+
+on:
+  schedule:
+    # Run every Sunday at midnight UTC
+    - cron: '0 0 * * 0'
+  # Allows manual triggering from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  retrain:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+        cache: 'pip'
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install dvc[s3] python-dotenv
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+
+    - name: Pull Data from DVC
+      env:
+        DAGSHUB_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
+        DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
+      run: |
+        dvc remote modify origin --local auth basic
+        dvc remote modify origin --local user $DAGSHUB_USERNAME
+        dvc remote modify origin --local password $DAGSHUB_TOKEN
+        dvc pull
+
+    - name: Run Retraining Pipeline
+      env:
+        DAGSHUB_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
+        DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
+        DAGSHUB_REPO_OWNER: ${{ secrets.DAGSHUB_REPO_OWNER }}
+        DAGSHUB_REPO_NAME: ${{ secrets.DAGSHUB_REPO_NAME }}
+      run: |
+        python -m src.pipeline.training_pipeline
+
+    - name: Push new model to DVC
+      env:
+        DAGSHUB_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
+        DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
+      run: |
+        dvc commit -f
+        dvc push
+
+    - name: Commit and Push changes to Git
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git config --global user.email "actions@github.com"
+        git config --global user.name "GitHub Actions"
+        git add dvc.lock artifacts/model_version.json
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-retrain: update model version and lockfile" && git push)
