@@ -144,3 +144,7 @@ cython_debug/
 mlruns/
 .dvc/tmp/
 .dvc/cache/
+# Grafana Alloy config and WAL data (contains secrets)
+config.alloy
+data-alloy/
+
