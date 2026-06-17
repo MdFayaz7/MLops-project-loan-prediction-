@@ -1,5 +1,7 @@
 # pyrefly: ignore [missing-import]
-from fastapi import FastAPI,Request
+from fastapi import FastAPI,Request,HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware  # 1. Import CORS Middleware
+
 # pyrefly: ignore [missing-import]
 from fastapi.templating import Jinja2Templates
 
@@ -14,6 +16,13 @@ from src.pipeline.prediction_pipeline import run_prediction_pipeline
 from src.components.model_monitoring import ModelMonitoring
 
 app= FastAPI(title="Loan Prediction API", description="API for predicting loan status")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins (essential for Hugging Face iframes)
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all HTTP methods (POST, GET, etc.)
+    allow_headers=["*"],  # Allows all HTTP headers
+)
 templates=Jinja2Templates(directory="templates")
 Instrumentator().instrument(app).expose(app,endpoint="/metrics")
 
@@ -54,9 +63,27 @@ class LoanInput(BaseModel):
     delinq_2yrs: float
     pub_rec: float
 
-
 @app.post("/predict")
+
 def predict(data:LoanInput):
+    errors=[]
+
+    if data.fico < 300 or data.fico > 850  :
+       errors.append("FICO score must be between 300 and 850")
+    if data.log_annual_inc <=0 :
+       errors.append("annual income should be greater than 0")
+    if data.installment <=0 :
+        errors.append("installment should be greater than 0")
+    if data.int_rate <=0 :
+        errors.append("interest rate should be greater than 0")
+    
+    if errors :
+        raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail={"messages":"Incomplete applictaion data provided."}
+           )
+
+
     input_dict={
         "credit.policy":data.credit_policy,
          "purpose": data.purpose,
