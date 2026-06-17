@@ -1,5 +1,8 @@
 # pyrefly: ignore [missing-import]
-from fastapi import FastAPI
+from fastapi import FastAPI,Request
+# pyrefly: ignore [missing-import]
+from fastapi.templating import Jinja2Templates
+
 # pyrefly: ignore [missing-import]
 from fastapi.responses import HTMLResponse
 from src.prediction_logger import log_prediction
@@ -11,7 +14,12 @@ from src.pipeline.prediction_pipeline import run_prediction_pipeline
 from src.components.model_monitoring import ModelMonitoring
 
 app= FastAPI(title="Loan Prediction API", description="API for predicting loan status")
+templates=Jinja2Templates(directory="templates")
 Instrumentator().instrument(app).expose(app,endpoint="/metrics")
+
+@app.get("/",response_class=HTMLResponse)
+def read_root(request:Request):
+    return templates.TemplateResponse("index.html",{"request":request})
 
 @app.get("/monitoring", response_class=HTMLResponse)
 def get_monitoring_report(refresh: bool = False):

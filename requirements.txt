@@ -9,3 +9,4 @@ prometheus-fastapi-instrumentator
 evidently
 python-dotenv
 dagshub
+jinja2

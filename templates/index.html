@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Approval Prediction</title>
+    <!-- Tailwind CSS for Styling -->
+    <script src="https://jsdelivr.net"></script>
+    <!-- React and Babel Scripts -->
+    <script src="https://unpkg.com" crossorigin></script>
+    <script src="https://unpkg.com" crossorigin></script>
+    <script src="https://unpkg.com"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-800 font-sans">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        function LoanForm() {
+            // Core React state management matching your Pydantic Schema variables
+            const [formData, setFormData] = React.useState({
+                credit_policy: 1, purpose: "debt_consolidation", int_rate: 0.11,
+                installment: 800.0, log_annual_inc: 11.5, dti: 15.0, fico: 700,
+                days_with_cr_line: 4000.0, revol_bal: 15000, revol_util: 50.0,
+                inq_last_6mths: 1, delinq_2yrs: 0, pub_rec: 0
+            });
+            const [prediction, setPrediction] = React.useState(null);
+            const [loading, setLoading] = React.useState(false);
+
+            const handleChange = (e) => {
+                const { name, value } = e.target;
+                setFormData({
+                    ...formData,
+                    [name]: name === "purpose" ? value : Number(value)
+                });
+            };
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setLoading(true);
+                try {
+                    // Pulls absolute application path dynamically
+                    const response = await fetch("/predict", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(formData)
+                    });
+                    const result = await response.json();
+                    setPrediction(result.prediction);
+                } catch (error) {
+                    alert("Prediction submission failed.");
+                }
+                setLoading(false);
+            };
+
+            return (
+                <div class="max-w-3xl mx-auto my-10 p-8 bg-white shadow-md rounded-xl">
+                    <h1 class="text-3xl font-bold text-blue-600 mb-6 text-center">💰 Loan Approval Assessor</h1>
+                    <form onSubmit={handleSubmit} class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Purpose</label>
+                            <select name="purpose" value={formData.purpose} onChange={handleChange} class="w-full border rounded p-2 bg-white">
+                                <option value="debt_consolidation">Debt Consolidation</option>
+                                <option value="credit_card">Credit Card</option>
+                                <option value="all_other">All Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">FICO Score ({formData.fico})</label>
+                            <input type="range" name="fico" min="300" max="850" value={formData.fico} onChange={handleChange} class="w-full" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Interest Rate (e.g. 0.11)</label>
+                            <input type="number" name="int_rate" step="0.01" value={formData.int_rate} onChange={handleChange} class="w-full border rounded p-2" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Monthly Installment ($)</label>
+                            <input type="number" name="installment" value={formData.installment} onChange={handleChange} class="w-full border rounded p-2" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Log Annual Income</label>
+                            <input type="number" name="log_annual_inc" step="0.1" value={formData.log_annual_inc} onChange={handleChange} class="w-full border rounded p-2" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Debt-to-Income (DTI) Ratio</label>
+                            <input type="number" name="dti" step="0.1" value={formData.dti} onChange={handleChange} class="w-full border rounded p-2" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Days with Credit Line</label>
+                            <input type="number" name="days_with_cr_line" value={formData.days_with_cr_line} onChange={handleChange} class="w-full border rounded p-2" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Revolving Balance</label>
+                            <input type="number" name="revol_bal" value={formData.revol_bal} onChange={handleChange} class="w-full border rounded p-2" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Revolving Line Utilization %</label>
+                            <input type="number" name="revol_util" value={formData.revol_util} onChange={handleChange} class="w-full border rounded p-2" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Inquiries Last 6 Months</label>
+                            <input type="number" name="inq_last_6mths" value={formData.inq_last_6mths} onChange={handleChange} class="w-full border rounded p-2" />
+                        </div>
+
+                        <div class="md:col-span-2 mt-6">
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
+                                {loading ? "Evaluating Metrics..." : "Submit Application"}
+                            </button>
+                        </div>
+                    </form>
+
+                    {prediction !== null && (
+                        <div class={`mt-8 p-6 rounded-lg text-center font-bold text-xl ${prediction === 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                            {prediction === 1 ? "✅ Loan Approved" : "❌ Loan Denied"}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<LoanForm />);
+    </script>
+</body>
+
+</html>
