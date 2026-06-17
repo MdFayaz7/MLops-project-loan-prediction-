@@ -21,10 +21,10 @@ jobs:
         with:
           python-version: '3.10'
           cache: 'pip'
-      - name: Install DVC
+      - name: Install DVC and HF CLI
         run: |
           python -m pip install --upgrade pip
-          pip install dvc[s3] python-dotenv 
+          pip install dvc[s3] python-dotenv huggingface_hub
       - name: Pull from DVC
         env:
           DAGSHUB_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
@@ -40,18 +40,4 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.loan }}
         run: |
-          # 1. Configure git user
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
-          
-          # 2. Clean the git history in the runner environment
-          rm -rf .git
-          
-          # 3. Create a fresh repository with only current files
-          git init
-          git checkout -b main
-          git add .
-          git commit -m "Deploy current state to Hugging Face"
-          
-          # 4. Push this clean commit
-          git push --force https://oauth:$HF_TOKEN@huggingface.co/spaces/MDFayaz/loan_approval_prediction main
+          huggingface-cli upload MDFayaz/loan_approval_prediction . . --token=$HF_TOKEN --repo-type=space --exclude ".git/*" --exclude ".github/*"
