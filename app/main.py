@@ -1,5 +1,6 @@
 # pyrefly: ignore [missing-import]
 from fastapi import FastAPI,Request,HTTPException, status
+# pyrefly: ignore [missing-import]
 from fastapi.middleware.cors import CORSMiddleware  # 1. Import CORS Middleware
 
 # pyrefly: ignore [missing-import]
@@ -18,10 +19,14 @@ from src.components.model_monitoring import ModelMonitoring
 app= FastAPI(title="Loan Prediction API", description="API for predicting loan status")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins (essential for Hugging Face iframes)
+    allow_origins=[
+        "https://huggingface.co",
+        "https://*.hf.space",
+        "https://mdfayaz-loan-approval-prediction.hf.space"
+    ],
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all HTTP methods (POST, GET, etc.)
-    allow_headers=["*"],  # Allows all HTTP headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 templates=Jinja2Templates(directory="templates")
 Instrumentator().instrument(app).expose(app,endpoint="/metrics")

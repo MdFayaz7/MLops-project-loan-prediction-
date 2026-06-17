@@ -5,13 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loan Approval Prediction</title>
-    <!-- Tailwind CSS for Styling -->
+
+    <!-- Tailwind CSS -->
     <script src="https://jsdelivr.net"></script>
-    <!-- React and Babel Scripts -->
-    <script src="https://unpkg.com" crossorigin></script>
-    <script src="https://unpkg.com" crossorigin></script>
-    <script src="https://unpkg.com"></script>
+
+    <!-- Stable React Scripts via CDNJS Mirror to bypass unpkg cross-origin bugs -->
+    <script src="https://cloudflare.com"></script>
+    <script src="https://cloudflare.com"></script>
+    <script src="https://cloudflare.com"></script>
 </head>
+
 
 <body class="bg-gray-50 text-gray-800 font-sans">
     <div id="root"></div>
@@ -40,19 +43,22 @@
                 e.preventDefault();
                 setLoading(true);
                 try {
-                    // Pulls absolute application path dynamically
-                    const response = await fetch("/predict", {
+                    // Change from "/predict" to your absolute hf.space path
+                    const response = await fetch("https://hf.space", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(formData)
                     });
                     const result = await response.json();
                     setPrediction(result.prediction);
-                } catch (error) {
+                }
+                catch (error) {
+                    console.error(error);
                     alert("Prediction submission failed.");
                 }
                 setLoading(false);
             };
+
 
             return (
                 <div class="max-w-3xl mx-auto my-10 p-8 bg-white shadow-md rounded-xl">
