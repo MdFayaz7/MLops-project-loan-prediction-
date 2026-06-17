@@ -7,12 +7,12 @@
     <title>Loan Approval Prediction</title>
 
     <!-- Tailwind CSS -->
-    <script src="https://jsdelivr.net"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Stable React Scripts via CDNJS Mirror to bypass unpkg cross-origin bugs -->
-    <script src="https://cloudflare.com"></script>
-    <script src="https://cloudflare.com"></script>
-    <script src="https://cloudflare.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.3/babel.min.js" crossorigin></script>
 </head>
 
 
@@ -43,8 +43,7 @@
                 e.preventDefault();
                 setLoading(true);
                 try {
-                    // Change from "/predict" to your absolute hf.space path
-                    const response = await fetch("https://hf.space", {
+                    const response = await fetch("/predict", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(formData)
