@@ -11,7 +11,8 @@
 
     <!-- Stable React Scripts via CDNJS Mirror to bypass unpkg cross-origin bugs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"
+        crossorigin></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.3/babel.min.js" crossorigin></script>
 </head>
 
@@ -80,7 +81,7 @@
                             <input type="number" name="int_rate" step="0.01" value={formData.int_rate} onChange={handleChange} class="w-full border rounded p-2" />
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold mb-1">Monthly Installment ($)</label>
+                            <label class="block text-sm font-semibold mb-1">Monthly Installment (₹)</label>
                             <input type="number" name="installment" value={formData.installment} onChange={handleChange} class="w-full border rounded p-2" />
                         </div>
                         <div>
@@ -116,8 +117,8 @@
                     </form>
 
                     {prediction !== null && (
-                        <div class={`mt-8 p-6 rounded-lg text-center font-bold text-xl ${prediction === 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                            {prediction === 1 ? "✅ Loan Approved" : "❌ Loan Denied"}
+                        <div class={`mt-8 p-6 rounded-lg text-center font-bold text-xl ${prediction === 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                            {prediction === 0 ? "✅ Loan Approved" : "❌ Loan Denied"}
                         </div>
                     )}
                 </div>

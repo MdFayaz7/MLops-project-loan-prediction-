@@ -106,4 +106,4 @@ def predict(data:LoanInput):
     }
     prediction,model_version=run_prediction_pipeline(input_dict)
     log_prediction(input_dict, prediction,model_version)
-    return{"prediction":prediction,"label":"Approved" if prediction==0 else "Rejected","model_version":model_version}
+    return{"prediction":prediction,"label":"Approved" if prediction==1 else "Rejected","model_version":model_version}
