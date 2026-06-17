@@ -40,4 +40,4 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.loan }}
         run: |
-          huggingface-cli upload MDFayaz/loan_approval_prediction . . --token=$HF_TOKEN --repo-type=space --exclude ".git/*" --exclude ".github/*"
+          hf upload MDFayaz/loan_approval_prediction . . --type space --exclude ".git/*" --exclude ".github/*"
